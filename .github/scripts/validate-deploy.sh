@@ -37,6 +37,16 @@ echo "${ENDPOINTS}" | while read endpoint; do
   fi
 done
 
+echo "Validating registry config"
+if ! kubectl get configmap -n "${NAMESPACE}" registry-config; then
+  echo "registry-config configmap is missing"
+  exit 1
+fi
+if ! kubectl get secret -n "${NAMESPACE}" registry-access; then
+  echo "registry-access secret is missing"
+  exit 1
+fi
+
 CONFIG_URLS=$(kubectl get configmap -n "${NAMESPACE}" -l grouping=garage-cloud-native-toolkit -l app.kubernetes.io/component=tools -o json | jq '.items[].data | to_entries | select(.[].key | endswith("_URL")) | .[].value' | sed "s/\"//g")
 
 echo "${CONFIG_URLS}" | while read url; do
