@@ -9,36 +9,6 @@ variable "gitops_dir" {
   default     = ""
 }
 
-variable "registry_namespace" {
-  type        = string
-  description = "The namespace in the image registry where images will be stored. This value can contain slashes."
-  default     = ""
-}
-
-variable "registry_host" {
-  type        = string
-  description = "The host name of the image registry"
-  default     = ""
-}
-
-variable "registry_url" {
-  type        = string
-  description = "The public url of the image registry"
-  default     = ""
-}
-
-variable "registry_user" {
-  type        = string
-  description = "The username for the image registry"
-  default     = ""
-}
-
-variable "registry_password" {
-  type        = string
-  description = "The password for the image registry"
-  default     = ""
-}
-
 variable "cluster_type_code" {
   type        = string
   description = "The cluster_type of the cluster"

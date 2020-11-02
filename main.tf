@@ -9,10 +9,11 @@ locals {
   gitops_dir            = var.gitops_dir != "" ? var.gitops_dir : "${path.cwd}/gitops"
   chart_name            = "image-registry"
   chart_dir             = "${local.gitops_dir}/${local.chart_name}"
-  registry_namespace    = var.registry_namespace != "" ? var.registry_namespace : "default"
   release_name          = "image-registry"
-  registry_host         = var.registry_host != "" ? var.registry_host : ""
-  registry_url          = var.registry_url != "" ? var.registry_url : "https://${local.registry_host}"
+  console_host_file     = "${local.tmp_dir}/console.host"
+  console_url           = "https://${data.local_file.console_host.content}"
+  registry_host         = "image-registry.openshift-image-registry.svc:5000"
+  registry_url          = "${local.console_url}/k8s/all-namespaces/imagestreams"
   global_config = {
     clusterType = var.cluster_type_code
   }
@@ -21,11 +22,6 @@ locals {
     displayName = "Image Registry"
     url = local.registry_url
     privateUrl = local.registry_host
-    otherSecrets = {
-      namespace = local.registry_namespace
-    }
-    username = var.registry_user
-    password = var.registry_password
     applicationMenu = true
   }
 }
@@ -72,6 +68,24 @@ resource "null_resource" "delete-helm-image-registry" {
       KUBECONFIG = var.config_file_path
     }
   }
+}
+
+resource "null_resource" "get_console_host" {
+  depends_on = [null_resource.create_dirs]
+
+  provisioner "local-exec" {
+    command = "kubectl get -n openshift-console route/console -o jsonpath='{.spec.host}' > ${local.console_host_file}"
+
+    environment = {
+      KUBECONFIG = var.config_file_path
+    }
+  }
+}
+
+data "local_file" "console_host" {
+  depends_on = [null_resource.get_console_host]
+
+  filename = local.console_host_file
 }
 
 resource "null_resource" "delete-consolelink" {
