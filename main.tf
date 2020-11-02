@@ -40,7 +40,7 @@ resource "null_resource" "create_dirs" {
 
 resource "null_resource" "setup-chart" {
   count = var.apply ? 1 : 0
-  depends_on = ["null_resource.create_dirs"]
+  depends_on = [null_resource.create_dirs]
 
   provisioner "local-exec" {
     command = "mkdir -p ${local.chart_dir} && cp -R ${path.module}/chart/${local.chart_name}/* ${local.chart_dir}"
