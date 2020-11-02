@@ -11,7 +11,7 @@ locals {
   chart_dir             = "${local.gitops_dir}/${local.chart_name}"
   release_name          = "image-registry"
   console_host_file     = "${local.tmp_dir}/console.host"
-  console_url           = "https://${data.local_file.console_host[0].content}"
+  console_url           = var.apply ? "https://${data.local_file.console_host[0].content}" : ""
   registry_host         = "image-registry.openshift-image-registry.svc:5000"
   registry_url          = "${local.console_url}/k8s/all-namespaces/imagestreams"
   global_config = {
