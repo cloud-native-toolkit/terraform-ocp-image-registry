@@ -19,3 +19,9 @@ variable "cluster_namespace" {
   type        = string
   description = "The namespace in the cluster where the configuration should be created (e.g. tools)"
 }
+
+variable "apply" {
+  type        = bool
+  description = "Flag indicating that the module should be applied"
+  default     = true
+}

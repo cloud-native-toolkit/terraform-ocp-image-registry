@@ -27,6 +27,8 @@ locals {
 }
 
 resource "null_resource" "create_dirs" {
+  count = var.apply ? 1 : 0
+
   provisioner "local-exec" {
     command = "mkdir -p ${local.tmp_dir}"
   }
@@ -37,6 +39,7 @@ resource "null_resource" "create_dirs" {
 }
 
 resource "null_resource" "setup-chart" {
+  count = var.apply ? 1 : 0
   depends_on = ["null_resource.create_dirs"]
 
   provisioner "local-exec" {
@@ -45,6 +48,7 @@ resource "null_resource" "setup-chart" {
 }
 
 resource "null_resource" "delete-helm-image-registry" {
+  count = var.apply ? 1 : 0
   provisioner "local-exec" {
     command = "kubectl delete secret -n ${var.cluster_namespace} -l name=${local.release_name} --ignore-not-found"
 
@@ -71,6 +75,7 @@ resource "null_resource" "delete-helm-image-registry" {
 }
 
 resource "null_resource" "get_console_host" {
+  count = var.apply ? 1 : 0
   depends_on = [null_resource.create_dirs]
 
   provisioner "local-exec" {
@@ -83,13 +88,14 @@ resource "null_resource" "get_console_host" {
 }
 
 data "local_file" "console_host" {
+  count = var.apply ? 1 : 0
   depends_on = [null_resource.get_console_host]
 
   filename = local.console_host_file
 }
 
 resource "null_resource" "delete-consolelink" {
-  count      = var.cluster_type_code == "ocp4" ? 1 : 0
+  count      = var.cluster_type_code == "ocp4" && var.apply ? 1 : 0
 
   provisioner "local-exec" {
     command = "kubectl delete consolelink toolkit-registry --ignore-not-found"
@@ -101,6 +107,7 @@ resource "null_resource" "delete-consolelink" {
 }
 
 resource "local_file" "image-registry-values" {
+  count = var.apply ? 1 : 0
   depends_on = [null_resource.setup-chart]
 
   content  = yamlencode({
@@ -111,12 +118,15 @@ resource "local_file" "image-registry-values" {
 }
 
 resource "null_resource" "print-values" {
+  count = var.apply ? 1 : 0
+
   provisioner "local-exec" {
-    command = "cat ${local_file.image-registry-values.filename}"
+    command = "cat ${local_file.image-registry-values[0].filename}"
   }
 }
 
 resource "helm_release" "registry_setup" {
+  count = var.apply ? 1 : 0
   depends_on = [null_resource.delete-helm-image-registry, null_resource.delete-consolelink, local_file.image-registry-values]
 
   name              = "image-registry"
