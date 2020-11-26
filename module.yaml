@@ -1,6 +1,6 @@
 name: ibm-image-registry
 type: terraform
-description: Module to set up the IBM Image Registru into a cluster
+description: Module to set up the IBM Image Registry into a cluster
 tags:
     - tools
     - devops
