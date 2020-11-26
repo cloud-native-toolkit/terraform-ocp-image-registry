@@ -1,14 +1,13 @@
-name: ibm-image-registry
+name: ocp-image-registry
 type: terraform
-description: Module to set up the IBM Image Registry into a cluster
+description: Module to set up the internal OCP Image Registry in a cluster
 tags:
     - tools
     - devops
+    - ocp
     - image registry
 versions:
 - platforms:
-    - kubernetes
-    - ocp3
     - ocp4
   dependencies:
     - id: cluster
