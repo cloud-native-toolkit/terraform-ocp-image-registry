@@ -10,8 +10,8 @@ locals {
   chart_name            = "image-registry"
   chart_dir             = "${local.gitops_dir}/${local.chart_name}"
   release_name          = "image-registry"
-  console_host_file     = "${local.tmp_dir}/console.host"
-  console_url           = var.apply ? "https://${data.local_file.console_host.content}" : ""
+  console_url_file     = "${local.tmp_dir}/console.host"
+  console_url           = var.apply ? "${data.local_file.console_url.content}" : ""
   registry_host         = "image-registry.openshift-image-registry.svc:5000"
   registry_url          = "${local.console_url}/k8s/all-namespaces/imagestreams"
   global_config = {
@@ -72,11 +72,11 @@ resource "null_resource" "delete-helm-image-registry" {
   }
 }
 
-resource "null_resource" "get_console_host" {
+resource "null_resource" "get_console_url" {
   depends_on = [null_resource.create_dirs]
 
   provisioner "local-exec" {
-    command = "kubectl get -n openshift-console route/console -o jsonpath='{.spec.host}' > ${local.console_host_file} && cat ${local.console_host_file}"
+    command = "oc whoami --show-console > ${local.console_url_file}"
 
     environment = {
       KUBECONFIG = var.config_file_path
@@ -84,15 +84,15 @@ resource "null_resource" "get_console_host" {
   }
 }
 
-data "local_file" "console_host" {
-  depends_on = [null_resource.get_console_host]
+data "local_file" "console_url" {
+  depends_on = [null_resource.get_console_url]
 
-  filename = local.console_host_file
+  filename = local.console_url_file
 }
 
-resource "null_resource" "print_console_host" {
+resource "null_resource" "print_console_url" {
   provisioner "local-exec" {
-    command = "echo 'host: ${data.local_file.console_host.content}'"
+    command = "echo 'host: ${data.local_file.console_url.content}'"
   }
 }
 
