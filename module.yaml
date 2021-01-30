@@ -1,6 +1,7 @@
 name: ocp-image-registry
 alias: registry
 type: terraform
+provider: k8s
 description: Module to set up the internal OCP Image Registry in a cluster
 tags:
     - tools
