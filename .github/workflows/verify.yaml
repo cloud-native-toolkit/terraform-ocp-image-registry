@@ -13,7 +13,7 @@ jobs:
   verify:
     if: ${{ !contains( github.event.pull_request.labels.*.name, 'skip ci' ) }}
     runs-on: ubuntu-latest
-    container: quay.io/ibmgaragecloud/cli-tools:v0.9.0-lite
+    container: quay.io/ibmgaragecloud/cli-tools:v0.10.0-lite
 
     strategy:
       matrix:
@@ -29,7 +29,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-      # Setups up the task
       - name: Verify deploy on ${{ matrix.platform }}
         uses: ibm-garage-cloud/action-module-verify-deploy@main
         with:
@@ -47,6 +46,7 @@ jobs:
         env:
           TF_VAR_ibmcloud_api_key: ${{ secrets.IBMCLOUD_API_KEY }}
           IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
+
 
   release:
     #    if: ${{ github.event_name == 'push' }}
