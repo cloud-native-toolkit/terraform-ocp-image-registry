@@ -1,4 +1,5 @@
 name: ocp-image-registry
+alias: registry
 type: terraform
 description: Module to set up the internal OCP Image Registry in a cluster
 tags:
@@ -37,4 +38,4 @@ versions:
     - name: gitops_dir
       scope: global
     - name: apply
-      scope: global
+      scope: ignore
