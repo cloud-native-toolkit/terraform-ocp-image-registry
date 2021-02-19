@@ -76,7 +76,7 @@ resource "null_resource" "get_console_url" {
   depends_on = [null_resource.create_dirs]
 
   provisioner "local-exec" {
-    command = "oc whoami --show-console > ${local.console_url_file}"
+    command = "${path.module}/scripts/get-console-url.sh ${local.console_url_file}"
 
     environment = {
       KUBECONFIG = var.config_file_path
