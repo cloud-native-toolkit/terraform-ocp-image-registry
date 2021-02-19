@@ -27,6 +27,7 @@ locals {
 }
 
 resource "null_resource" "create_dirs" {
+  count = var.apply ? 1 : 0
   provisioner "local-exec" {
     command = "mkdir -p ${local.tmp_dir}"
   }
@@ -73,6 +74,7 @@ resource "null_resource" "delete-helm-image-registry" {
 }
 
 resource "null_resource" "get_console_url" {
+  count = var.apply ? 1 : 0
   depends_on = [null_resource.create_dirs]
 
   provisioner "local-exec" {
@@ -85,12 +87,14 @@ resource "null_resource" "get_console_url" {
 }
 
 data "local_file" "console_url" {
+  count = var.apply ? 1 : 0
   depends_on = [null_resource.get_console_url]
 
   filename = local.console_url_file
 }
 
 resource "null_resource" "print_console_url" {
+  count = var.apply ? 1 : 0
   provisioner "local-exec" {
     command = "echo 'host: ${data.local_file.console_url.content}'"
   }
