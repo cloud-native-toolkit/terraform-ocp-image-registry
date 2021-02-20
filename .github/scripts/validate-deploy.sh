@@ -22,7 +22,7 @@ fi
 CONSOLE_HOST=$(kubectl get -n openshift-console route/console -o jsonpath='{.spec.host}')
 EXPECTED_REGISTRY_URL="https://${CONSOLE_HOST}/k8s/all-namespaces/imagestreams"
 
-ACTUAL_REGISTRY_URL=$(kubectl get configmap -n "${NAMESPACE}" "${CONFIGMAP_NAME}" -o jsonpath '{.data.ACTUAL_REGISTRY_URL}')
+ACTUAL_REGISTRY_URL=$(kubectl get configmap -n "${NAMESPACE}" "${CONFIGMAP_NAME}" -o jsonpath '{.data.REGISTRY_URL}')
 if [[ "${ACTUAL_REGISTRY_URL}" != "${EXPECTED_REGISTRY_URL}" ]]; then
   echo "The configmap REGISTRY_URL does not match the expected value. Expected: ${EXPECTED_REGISTRY_URL}, Actual: ${ACTUAL_REGISTRY_URL}"
   exit 1
