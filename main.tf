@@ -96,7 +96,7 @@ data "local_file" "console_url" {
 resource "null_resource" "print_console_url" {
   count = var.apply ? 1 : 0
   provisioner "local-exec" {
-    command = "echo 'host: ${data.local_file.console_url.content}'"
+    command = "echo 'host: ${local.console_url}'"
   }
 }
 
