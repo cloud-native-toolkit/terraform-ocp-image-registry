@@ -36,7 +36,7 @@ fi
 
 # Test that secret has ACTUAL_REGISTRY_URL of image-registry.openshift-image-registry.svc:5000
 EXPECTED_INTERNAL_REGISTRY_URL="image-registry.openshift-image-registry.svc:5000"
-ACTUAL_INTERNAL_REGISTRY_URL=$(kubectl get secret -n "${NAMESPACE}" "${SECRET_NAME}" -o jsonpath '{.data.REGISTRY_URL}' | base64 -d)
+ACTUAL_INTERNAL_REGISTRY_URL=$(kubectl get secret -n "${NAMESPACE}" "${SECRET_NAME}" -o jsonpath='{.data.REGISTRY_URL}' | base64 -d)
 
 if [[ "${ACTUAL_INTERNAL_REGISTRY_URL}" != "${EXPECTED_INTERNAL_REGISTRY_URL}" ]]; then
   echo "The secret REGISTRY_URL does not match the expected value. Expected: ${EXPECTED_INTERNAL_REGISTRY_URL}, Actual: ${ACTUAL_INTERNAL_REGISTRY_URL}"
