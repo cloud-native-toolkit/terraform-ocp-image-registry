@@ -10,7 +10,7 @@ NAME="$3"
 CONSOLE_LINK_NAME="$4"
 
 CONFIGMAP_NAME="registry-config"
-SECRET_NAME="registy-access"
+SECRET_NAME="registry-access"
 
 # Test that configmap has been created
 if ! kubectl get configmap -n "${NAMESPACE}" "${CONFIGMAP_NAME}" 1> /dev/null 2> /dev/null; then
